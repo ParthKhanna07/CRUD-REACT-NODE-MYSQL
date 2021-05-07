@@ -35,9 +35,19 @@ app.post("/api/insert", (req,res) =>{
     const sqlInsert="INSERT INTO movie_reviews (movieName, movieReview) VALUES (?,?); "
     db.query(sqlInsert, [movieName,movieReview], (err,result) =>{
         console.log(result)
+        res.send(result)
     })
 })
 
+app.delete("/api/delete/:movieName", (req,res)=>{
+    const name=req.params.movieName
+    const sqlDelete=
+    "DELETE FROM movie_reviews WHERE movieName=? "
+    db.query(sqlDelete, name, (err,result) =>{
+       if (err) console.log(err)
+        
+    })
+})
 
 
 

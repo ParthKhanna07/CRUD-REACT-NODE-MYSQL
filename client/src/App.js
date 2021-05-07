@@ -20,10 +20,18 @@ function App() {
     Axios.post("http://localhost:3001/api/insert", {
       movieName:movieName,
       movieReview:review
-    }).then(()=>{
-      alert("success")
     })
+      setMovieList(
+        [... movieReviewList,
+          {movieName:movieName,movieReview:review}
+        ])
+    
   }
+
+  const deleteReview=(movie)=>{
+    Axios.delete(`http://localhost:3001/api/delete/${movie}`)
+  }
+
   return (
     <div className="App">
       <h1> CRUD APPLICATION </h1>
@@ -39,7 +47,15 @@ function App() {
       <button onClick={submitReview}>Submit</button>
 
       {movieReviewList.map((val)=>{
-        return <h1>Movie Name: {val.movieName} | Movie Review: {val.movieReview}</h1>
+        return <div className="card">
+         <h1>{val.movieName}</h1>  
+         <p>{val.movieReview}</p>
+
+         <button onClick={()=>{deleteReview(val.movieName)}}>Delete</button>
+         <input type="text" id="updateInput"></input>
+         <button>Update</button>
+
+          </div>
 
       })}
       </div>

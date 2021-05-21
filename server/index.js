@@ -57,3 +57,5 @@ app.put("/api/update", (req, res) => {
 app.listen(3001, () => {
   console.log("port 3001");
 });
+
+module.exports=index;

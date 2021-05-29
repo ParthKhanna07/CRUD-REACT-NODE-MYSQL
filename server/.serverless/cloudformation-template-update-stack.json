@@ -74,7 +74,7 @@
     "AppLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/serverless-mine-app"
+        "LogGroupName": "/aws/lambda/sls-crud-complete-sls-complete-app"
       }
     },
     "IamRoleLambdaExecution": {
@@ -102,8 +102,8 @@
               "Fn::Join": [
                 "-",
                 [
-                  "serverless",
-                  "mine",
+                  "sls-crud-complete",
+                  "sls-complete",
                   "lambda"
                 ]
               ]
@@ -119,7 +119,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/serverless-mine*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/sls-crud-complete-sls-complete*:*"
                     }
                   ]
                 },
@@ -130,7 +130,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/serverless-mine*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/sls-crud-complete-sls-complete*:*:*"
                     }
                   ]
                 }
@@ -143,8 +143,8 @@
           "Fn::Join": [
             "-",
             [
-              "serverless",
-              "mine",
+              "sls-crud-complete",
+              "sls-complete",
               {
                 "Ref": "AWS::Region"
               },
@@ -161,11 +161,11 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/serverless/mine/1622201927747-2021-05-28T11:38:47.747Z/serverless.zip"
+          "S3Key": "serverless/sls-crud-complete/sls-complete/1622269841755-2021-05-29T06:30:41.755Z/sls-crud-complete.zip"
         },
         "Handler": "index.handler",
         "Runtime": "nodejs12.x",
-        "FunctionName": "serverless-mine-app",
+        "FunctionName": "sls-crud-complete-sls-complete-app",
         "MemorySize": 1024,
         "Timeout": 6,
         "Role": {
@@ -179,20 +179,20 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionDKzmw41DLjSMNqj9yrBMmuYv7yFJCDQNaGdkrT8DaHo": {
+    "AppLambdaVersionveB0DZRYRUCNFwvWKb9lCJmFbQ4nlxQwOt5eVrJNM": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "XUHxnIHHiOyJT215YiGDYhqISfMZtHn9zMBsQSrzdq0="
+        "CodeSha256": "8JZM48BRcDjZN1kcwjqooawXqeQqEnH5xVsTJnnurME="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "mine-serverless",
+        "Name": "sls-complete-sls-crud-complete",
         "EndpointConfiguration": {
           "Types": [
             "EDGE"
@@ -201,25 +201,10 @@
         "Policy": ""
       }
     },
-    "ApiGatewayResourceProxyVar": {
-      "Type": "AWS::ApiGateway::Resource",
-      "Properties": {
-        "ParentId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
-          ]
-        },
-        "PathPart": "{proxy+}",
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        }
-      }
-    },
-    "ApiGatewayMethodAny": {
+    "ApiGatewayMethodGet": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
-        "HttpMethod": "ANY",
+        "HttpMethod": "GET",
         "RequestParameters": {},
         "ResourceId": {
           "Fn::GetAtt": [
@@ -262,13 +247,16 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayMethodProxyVarAny": {
+    "ApiGatewayMethodPost": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
-        "HttpMethod": "ANY",
+        "HttpMethod": "POST",
         "RequestParameters": {},
         "ResourceId": {
-          "Ref": "ApiGatewayResourceProxyVar"
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -305,17 +293,111 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1622201922211": {
+    "ApiGatewayMethodPut": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "PUT",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AppLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      }
+    },
+    "ApiGatewayMethodDelete": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AppLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      }
+    },
+    "ApiGatewayDeployment1622269836836": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         },
-        "StageName": "mine"
+        "StageName": "sls-complete"
       },
       "DependsOn": [
-        "ApiGatewayMethodAny",
-        "ApiGatewayMethodProxyVarAny"
+        "ApiGatewayMethodGet",
+        "ApiGatewayMethodPost",
+        "ApiGatewayMethodPut",
+        "ApiGatewayMethodDelete"
       ]
     },
     "AppLambdaPermissionApiGateway": {
@@ -362,16 +444,16 @@
         "Ref": "ServerlessDeploymentBucket"
       },
       "Export": {
-        "Name": "sls-serverless-mine-ServerlessDeploymentBucketName"
+        "Name": "sls-sls-crud-complete-sls-complete-ServerlessDeploymentBucketName"
       }
     },
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionDKzmw41DLjSMNqj9yrBMmuYv7yFJCDQNaGdkrT8DaHo"
+        "Ref": "AppLambdaVersionveB0DZRYRUCNFwvWKb9lCJmFbQ4nlxQwOt5eVrJNM"
       },
       "Export": {
-        "Name": "sls-serverless-mine-AppLambdaFunctionQualifiedArn"
+        "Name": "sls-sls-crud-complete-sls-complete-AppLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
@@ -392,12 +474,12 @@
             {
               "Ref": "AWS::URLSuffix"
             },
-            "/mine"
+            "/sls-complete"
           ]
         ]
       },
       "Export": {
-        "Name": "sls-serverless-mine-ServiceEndpoint"
+        "Name": "sls-sls-crud-complete-sls-complete-ServiceEndpoint"
       }
     }
   }

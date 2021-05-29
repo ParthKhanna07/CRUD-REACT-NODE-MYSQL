@@ -9,7 +9,7 @@ function App() {
   const [movieReviewList, setMovieList] = useState([]);
   const [newReview, setNewReview] = useState("");
 
-  const url="https://wkd7y4eeph.execute-api.ap-south-1.amazonaws.com/mine";
+  const url="https://vsi5vy3ekc.execute-api.ap-south-1.amazonaws.com/sls-complete"
 
   useEffect(() => {
     Axios.get(url).then((response) => {
@@ -20,9 +20,11 @@ function App() {
 
   const submitReview = () => {
     Axios.post(url, {
+      params:{
       movieName: movieName,
       movieReview: review,
-    });
+    }
+  });
     setMovieList([
       ...movieReviewList,
       { movieName: movieName, movieReview: review },
@@ -30,15 +32,21 @@ function App() {
   };
 
   const deleteReview = (movie) => {
-    Axios.delete(url);
+    Axios.delete(url, {
+      params:{
+      movieName: movie
+    }
+  });
     window.location.reload();
   };
 
   const updateReview = (movie) => {
     Axios.put(url, {
+      params:{
       movieName: movie,
       movieReview: newReview,
-    });
+    }
+  });
     setNewReview("");
     window.location.reload();
   };

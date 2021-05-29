@@ -17,7 +17,7 @@ app.use(cors());
 
 module.exports.delete = (event, context, callback) => {
 
-  app.delete(":movieName", (req, res) => {
+  app.delete("", (req, res) => {
     const name = req.params.movieName;
     const sqlDelete = "DELETE FROM movie_reviews WHERE movieName=? ";
     db.query(sqlDelete, name, (err, result) => {

@@ -1,4 +1,4 @@
-service: serverless
+service: sls-crud-complete
 
 
 provider:
@@ -7,7 +7,7 @@ provider:
 
   runtime: nodejs12.x
 
-  stage: mine
+  stage: sls-complete
 
   region: ap-south-1
 
@@ -20,6 +20,10 @@ functions:
 
     events:
 
-      - http: ANY /
+      - http: GET /
 
-      - http: 'ANY {proxy+}'
+      - http: POST /
+      - http: PUT /
+      - http: DELETE /
+
+

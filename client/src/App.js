@@ -10,7 +10,7 @@ function App() {
   const [newReview, setNewReview] = useState("");
  
 
-  const url="https://vsi5vy3ekc.execute-api.ap-south-1.amazonaws.com/sls-complete"
+  const url="https://q3fjhyqa6d.execute-api.ap-south-1.amazonaws.com/sls-final"
 
   useEffect(() => {
     Axios.get(url).then((response) => {
@@ -32,16 +32,16 @@ function App() {
       ...movieReviewList,
       { movieName: movieName, movieReview: review },
     ]);
-    window.location.reload();
+    
   };
 
   const deleteReview = (movie) => {
-    Axios.delete(url,null, {
-      params:{
-      movieName: movie
-    }
+    const delurl=url+"?movieName="+movie;
+    Axios.delete(delurl).then((response) => {
+    console.log(response.data);
+    //setMovieList(response.data);
   });
-    window.location.reload();
+  //window.location.reload();
   };
 
   const updateReview = (movie) => {
@@ -50,11 +50,11 @@ function App() {
       movieName: movie,
       movieReview: newReview
     }
-  });
+  })
     setNewReview("");
-    window.location.reload();
+   
   };
-
+  
   return (
     <div className="App">
       <h1> CRUD APPLICATION </h1>

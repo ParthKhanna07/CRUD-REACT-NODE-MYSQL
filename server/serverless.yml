@@ -1,4 +1,5 @@
-service: sls-crud-complete
+
+service: sls-crud-final
 
 
 provider:
@@ -7,7 +8,7 @@ provider:
 
   runtime: nodejs12.x
 
-  stage: sls-complete
+  stage: sls-final
 
   region: ap-south-1
 
@@ -25,5 +26,5 @@ functions:
       - http: POST /
       - http: PUT /
       - http: DELETE /
-
+              
 
